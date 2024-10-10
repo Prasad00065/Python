@@ -17,6 +17,7 @@ def log_cpu_usage():
                 f.write(f"{process_name} : {cpu_percent}%\n")
 
 def main():
+    print("test")
     while True:
         processes_exceeded_threshold = False  # Flag to track if any process exceeds the threshold
         for process in psutil.process_iter(['name', 'cpu_percent']):
