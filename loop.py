@@ -21,18 +21,16 @@ def main():
         for process in psutil.process_iter(['name', 'cpu_percent']):
             process_name = process.info['name']
             cpu_percent = process.info['cpu_percent']
+            if process_name != 'Idle' and process_name in included_processes:
+                print(f"Process to be monitored: {process_name} (CPU Usage: {cpu_percent}%)")
             
-            # Log the CPU usage for included processes without termination logic
-            if process_name in included_processes:
-                print(f"Process monitored: {process_name} (CPU Usage: {cpu_percent}%)")
-                
             if cpu_percent > threshold_percentage:
                 processes_exceeded_threshold = True
         
         if processes_exceeded_threshold:
             log_cpu_usage()
 
-        time.sleep(100)  # Adjusted sleep duration to 100 seconds
+        time.sleep(1)  # Adjust sleep duration to 1 second for more frequent checking
 
 if __name__ == "__main__":
     main()
