@@ -1,5 +1,4 @@
 import psutil
-import subprocess
 import time
 import socket
 
@@ -17,28 +16,23 @@ def log_cpu_usage():
                 f.write(f"{process_name} : {cpu_percent}%\n")
 
 def main():
-    print("test")
     while True:
         processes_exceeded_threshold = False  # Flag to track if any process exceeds the threshold
         for process in psutil.process_iter(['name', 'cpu_percent']):
             process_name = process.info['name']
             cpu_percent = process.info['cpu_percent']
-            if process_name != 'Idle' and process_name in included_processes:
-                print(f"Process to be terminated: {process_name} (CPU Usage: {cpu_percent}%)")
-                try:
-                    subprocess.run(['taskkill', '/F', '/IM', process_name], check=True)
-                    print(f"Terminated process: {process_name}")
-                    
-                except subprocess.CalledProcessError:
-                    print(f"Failed to terminate process: {process_name}")
             
+            # Log the CPU usage for included processes without termination logic
+            if process_name in included_processes:
+                print(f"Process monitored: {process_name} (CPU Usage: {cpu_percent}%)")
+                
             if cpu_percent > threshold_percentage:
                 processes_exceeded_threshold = True
         
         if processes_exceeded_threshold:
             log_cpu_usage()
 
-        time.sleep(10)  # Adjust the sleep duration as needed
+        time.sleep(100)  # Adjusted sleep duration to 100 seconds
 
 if __name__ == "__main__":
     main()
